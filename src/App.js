@@ -42,12 +42,8 @@ const App = () => {
       console.log("data", data);
       const _data = JSON.parse(data);
       if (_data.type === "roll") {
-        const { number } = _data;
-        const currentValue = rolls[number];
-        setRolls({
-          ...rolls,
-          [number]: currentValue + 1,
-        });
+        const { rolls: newRolls } = _data;
+        setRolls(newRolls);
       }
       if (_data.type === "reset") {
         setRolls(initialRolls);
