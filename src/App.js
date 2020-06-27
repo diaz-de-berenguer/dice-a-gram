@@ -6,7 +6,8 @@ import Page from "./Page";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { hot } from "react-hot-loader/root";
 
-const client = new W3CWebSocket("ws://127.0.0.1:8000");
+const SERVER = "wss://dice-a-gram-server.herokuapp.com";
+const client = new W3CWebSocket(SERVER);
 
 const initialRolls = {
   1: 0,
