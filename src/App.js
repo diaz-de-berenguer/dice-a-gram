@@ -1,8 +1,10 @@
-import { hot } from "react-hot-loader/root";
-import React, { useEffect, useState } from "react";
 import "./App.css";
-import { w3cwebsocket as W3CWebSocket } from "websocket";
+
+import React, { useEffect, useState } from "react";
+
 import Page from "./Page";
+import { w3cwebsocket as W3CWebSocket } from "websocket";
+import { hot } from "react-hot-loader/root";
 
 const client = new W3CWebSocket("ws://127.0.0.1:8000");
 
@@ -32,14 +34,12 @@ export const AppContext = React.createContext({
 const App = () => {
   const [activePage, setActivePage] = useState("home");
   const [rolls, setRolls] = useState(initialRolls);
-  console.log("rolls", rolls);
 
   useEffect(() => {
     client.onopen = () => {
       console.log("WebSocket Client Connected");
     };
     client.onmessage = ({ data }) => {
-      console.log("data", data);
       const _data = JSON.parse(data);
       if (_data.type === "roll") {
         const { rolls: newRolls } = _data;
