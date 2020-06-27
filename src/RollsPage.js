@@ -16,7 +16,7 @@ const Rolls = () => {
     );
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={2} style={{ paddingTop: "10px" }}>
       {Object.keys(rolls).map((number) => (
         <Grid item xs={6}>
           <Button
@@ -24,7 +24,7 @@ const Rolls = () => {
             size="large"
             variant="outlined"
             onClick={() => rollNumber(number)}
-            style={{ width: "100%", paddingTop: "20px", paddingBottom: "20px" }}
+            style={{ width: "100%", paddingTop: "18px", paddingBottom: "18px" }}
           >
             <Typography variant="h4">{number}</Typography>
           </Button>
