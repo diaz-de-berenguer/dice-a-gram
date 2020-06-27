@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
-import Typography from "@material-ui/core/Typography";
+
+import { AppContext } from "./App";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import { AppContext } from "./App";
+import Typography from "@material-ui/core/Typography";
 
 const Rolls = () => {
   const { client, rolls } = useContext(AppContext);
@@ -16,20 +17,19 @@ const Rolls = () => {
 
   return (
     <Grid container spacing={3}>
-      {
+      {Object.keys(rolls).map((number) => (
         <Grid item xs={6}>
-          {Object.keys(rolls).map((number) => (
-            <Button
-              key={number}
-              size="large"
-              variant="outlined"
-              onClick={() => rollNumber(number)}
-            >
-              {number}
-            </Button>
-          ))}
+          <Button
+            key={number}
+            size="large"
+            variant="outlined"
+            onClick={() => rollNumber(number)}
+            style={{ width: "100%", paddingTop: "20px", paddingBottom: "20px" }}
+          >
+            <Typography variant="h4">{number}</Typography>
+          </Button>
         </Grid>
-      }
+      ))}
     </Grid>
   );
 };
@@ -44,9 +44,6 @@ export default () => {
           Back
         </Button>
       </Grid>
-      <Typography variant="h2" gutterBottom>
-        Rolls
-      </Typography>
       <Rolls />
     </Grid>
   );
