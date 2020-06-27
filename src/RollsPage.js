@@ -8,7 +8,7 @@ import Replay from "@material-ui/icons/Replay";
 import Typography from "@material-ui/core/Typography";
 
 const Rolls = () => {
-  const { client, rolls } = useContext(AppContext);
+  const { client, rolls, lastRoll } = useContext(AppContext);
   const rollNumber = (number) =>
     client.send(
       JSON.stringify({
@@ -16,6 +16,15 @@ const Rolls = () => {
         number,
       })
     );
+  const style = (number) => {
+    const s =
+      Number(number) === Number(lastRoll)
+        ? {
+            backgroundColor: "#eef4fc",
+          }
+        : {};
+    return { width: "100%", paddingTop: "18px", paddingBottom: "18px", ...s };
+  };
   return (
     <Grid container spacing={2} style={{ paddingTop: "10px" }}>
       {Object.keys(rolls).map((number) => (
@@ -24,7 +33,7 @@ const Rolls = () => {
             size="large"
             variant="outlined"
             onClick={() => rollNumber(number)}
-            style={{ width: "100%", paddingTop: "18px", paddingBottom: "18px" }}
+            style={style(number)}
           >
             <Typography variant="h4">{number}</Typography>
           </Button>
