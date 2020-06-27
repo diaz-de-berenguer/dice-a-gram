@@ -8,7 +8,7 @@
     "start": "webpack-dev-server --mode development",
     "build": "webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "predeploy": "npm run build && cp public/index.html dist/",
+    "predeploy": "npm run build && cp public/prod-index.html dist/index.html",
     "deploy": "gh-pages -d dist -m \"Deployment\""
   },
   "keywords": [],
