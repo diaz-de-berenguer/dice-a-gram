@@ -119,7 +119,7 @@ export default () => {
       <div
         style={{
           position: "fixed",
-          top: "5%",
+          top: "8%",
           bottom: "85%",
           right: "10%",
           left: "5%",
