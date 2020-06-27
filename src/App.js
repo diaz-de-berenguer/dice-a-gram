@@ -6,6 +6,7 @@ import Page from "./Page";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { hot } from "react-hot-loader/root";
 
+// const SERVER = "ws://localhost:8000";
 const SERVER = "wss://dice-a-gram-server.herokuapp.com";
 const client = new W3CWebSocket(SERVER);
 
@@ -35,6 +36,7 @@ export const AppContext = React.createContext({
 const App = () => {
   const [activePage, setActivePage] = useState("home");
   const [rolls, setRolls] = useState(initialRolls);
+  const [lastRoll, setLastRoll] = useState();
 
   useEffect(() => {
     client.onopen = () => {
@@ -43,11 +45,13 @@ const App = () => {
     client.onmessage = ({ data }) => {
       const _data = JSON.parse(data);
       if (_data.type === "roll") {
-        const { rolls: newRolls } = _data;
+        const { rolls: newRolls, lastRoll } = _data;
         setRolls(newRolls);
+        setLastRoll(lastRoll);
       }
       if (_data.type === "reset") {
         setRolls(initialRolls);
+        setLastRoll(undefined);
       }
     };
   });
@@ -55,7 +59,7 @@ const App = () => {
   return (
     <div className="App">
       <AppContext.Provider
-        value={{ activePage, setActivePage, rolls, setRolls, client }}
+        value={{ activePage, setActivePage, rolls, setRolls, client, lastRoll }}
       >
         <Page />
       </AppContext.Provider>

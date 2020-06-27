@@ -3,13 +3,14 @@ import * as d3 from "d3";
 import React, { useContext, useEffect } from "react";
 
 import { AppContext } from "./App";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 
 let svg;
 
-const drawChart = (svg, rolls) => {
-  console.log("draw chart called");
+const drawChart = (svg, rolls, lastRoll) => {
   const data = Object.entries(rolls).map(([number, value]) => ({
     number,
     value,
@@ -19,6 +20,7 @@ const drawChart = (svg, rolls) => {
   const width = parseInt(d3.select("#barchart").style("width"), 10);
   const height = parseInt(d3.select("#barchart").style("height"), 10);
   const max = d3.max(data, (d) => d.value);
+  const axisFontSize = "18px";
 
   const x = d3
     .scaleBand()
@@ -33,6 +35,7 @@ const drawChart = (svg, rolls) => {
   const yAxis = (g) =>
     g
       .attr("transform", `translate(${margin.left},0)`)
+      .style("font-size", axisFontSize)
       .call(d3.axisLeft(y).ticks(max))
       .call((g) =>
         g
@@ -45,12 +48,15 @@ const drawChart = (svg, rolls) => {
       );
 
   const xAxis = (g) =>
-    g.attr("transform", `translate(0,${height - margin.bottom})`).call(
-      d3
-        .axisBottom(x)
-        .tickFormat((i) => data[i].number)
-        .tickSizeOuter(0)
-    );
+    g
+      .attr("transform", `translate(0,${height - margin.bottom})`)
+      .style("font-size", axisFontSize)
+      .call(
+        d3
+          .axisBottom(x)
+          .tickFormat((i) => data[i].number)
+          .tickSizeOuter(0)
+      );
   const yAxisGrid = (g) =>
     g
       .attr("transform", `translate(${margin.left},0)`)
@@ -59,20 +65,22 @@ const drawChart = (svg, rolls) => {
 
   svg
     .append("g")
-    .attr("fill", color)
     .selectAll("rect")
     .data(data)
     .join("rect")
     .attr("x", (d, i) => x(i))
     .attr("y", (d) => y(d.value))
     .attr("height", (d) => y(0) - y(d.value))
-    .attr("width", x.bandwidth());
+    .attr("width", x.bandwidth())
+    .attr("fill", (d) => {
+      return d.number === lastRoll ? "#46b482" : color;
+    });
   svg.append("g").call(xAxis);
   svg.append("g").call(yAxis);
 };
 
 export default () => {
-  const { setActivePage, rolls } = useContext(AppContext);
+  const { setActivePage, rolls, lastRoll } = useContext(AppContext);
   const goToPage = (page) => setActivePage(page);
 
   useEffect(() => {
@@ -84,13 +92,17 @@ export default () => {
       .append("svg")
       .attr("width", "100%")
       .attr("height", "100%");
-    drawChart(svg, rolls);
-  }, [rolls]);
+    drawChart(svg, rolls, lastRoll);
+  }, [rolls, lastRoll]);
 
   return (
     <Grid container>
-      <Grid item xs={12}>
-        <Button size="large" onClick={() => goToPage("home")}>
+      <Grid item xs={5}>
+        <Button
+          size="large"
+          onClick={() => goToPage("home")}
+          startIcon={<ArrowBackIcon />}
+        >
           Back
         </Button>
       </Grid>
@@ -104,6 +116,20 @@ export default () => {
           left: "5%",
         }}
       />
+      <div
+        style={{
+          position: "fixed",
+          top: "5%",
+          bottom: "85%",
+          right: "10%",
+          left: "5%",
+          textAlign: "center",
+        }}
+      >
+        {lastRoll && (
+          <Typography variant="h4">Last Roll: {lastRoll}</Typography>
+        )}
+      </div>
     </Grid>
   );
 };
