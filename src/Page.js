@@ -7,7 +7,7 @@ import RollsPage from "./RollsPage";
 import StatsPage from "./StatsPage";
 
 export default () => (
-  <Router>
+  <Router basename={process.env.PUBLIC_URL}>
     <Switch>
       <Route path="/rolls">
         <RollsPage />
