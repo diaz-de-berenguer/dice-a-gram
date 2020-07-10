@@ -7,6 +7,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import { useHistory } from "react-router-dom";
 
 let svg;
 
@@ -80,8 +81,9 @@ const drawChart = (svg, rolls, lastRoll) => {
 };
 
 export default () => {
-  const { setActivePage, rolls, lastRoll } = useContext(AppContext);
-  const goToPage = (page) => setActivePage(page);
+  const { rolls, lastRoll } = useContext(AppContext);
+  const history = useHistory();
+  const goToPage = (page) => history.push(page);
 
   useEffect(() => {
     if (svg) {

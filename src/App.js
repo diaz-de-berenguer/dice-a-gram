@@ -1,14 +1,17 @@
 import "./App.css";
 
+import { Dialog, DialogTitle } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 
 import Page from "./Page";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { hot } from "react-hot-loader/root";
 
-// const SERVER = "ws://localhost:8000";
-const SERVER = "wss://dice-a-gram-server.herokuapp.com";
-const client = new W3CWebSocket(SERVER);
+const SERVER = "ws://localhost:8000";
+// const SERVER = "wss://dice-a-gram-server.herokuapp.com";
+
+const getClient = () => new W3CWebSocket(SERVER);
+let client = getClient();
 
 const initialRolls = {
   1: 0,
@@ -26,21 +29,43 @@ const initialRolls = {
 };
 
 export const AppContext = React.createContext({
-  activePage: "",
-  setActivePage: () => {},
   rolls: initialRolls,
   setRolls: () => {},
   client,
 });
 
+let pingTimer;
+
+const ping = (setConnected) => {
+  try {
+    client.send(
+      JSON.stringify({
+        type: "__ping__",
+      })
+    );
+  } catch (error) {
+    console.log("unable to send ping. Error:", error);
+  }
+  pingTimer = setTimeout(function () {
+    setConnected(false);
+    location.reload();
+  }, 5000);
+};
+
 const App = () => {
-  const [activePage, setActivePage] = useState("home");
+  // const [activePage, setActivePage] = useState("home");
   const [rolls, setRolls] = useState(initialRolls);
   const [lastRoll, setLastRoll] = useState();
+  const [connected, setConnected] = useState(false);
 
   useEffect(() => {
     client.onopen = () => {
       console.log("WebSocket Client Connected");
+      ping(setConnected);
+      setConnected(true);
+    };
+    client.onclose = () => {
+      setConnected(false);
     };
     client.onmessage = ({ data }) => {
       const _data = JSON.parse(data);
@@ -53,16 +78,22 @@ const App = () => {
         setRolls(initialRolls);
         setLastRoll(undefined);
       }
+      if (_data.type === "__pong__") {
+        clearTimeout(pingTimer);
+        setTimeout(() => ping(setConnected), 3000);
+        setConnected(true);
+      }
     };
   });
 
   return (
     <div className="App">
-      <AppContext.Provider
-        value={{ activePage, setActivePage, rolls, setRolls, client, lastRoll }}
-      >
+      <AppContext.Provider value={{ rolls, setRolls, client, lastRoll }}>
         <Page />
       </AppContext.Provider>
+      <Dialog open={!connected}>
+        <DialogTitle id="dialog-title">Disconnected</DialogTitle>
+      </Dialog>
     </div>
   );
 };

@@ -1,3 +1,10 @@
+import {
+  Link,
+  Route,
+  BrowserRouter as Router,
+  Switch,
+  useHistory,
+} from "react-router-dom";
 import React, { useContext } from "react";
 
 import { AppContext } from "./App";
@@ -6,8 +13,9 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 export default () => {
-  const { setActivePage, client } = useContext(AppContext);
-  const goToPage = (page) => setActivePage(page);
+  const { client } = useContext(AppContext);
+  const history = useHistory();
+  const goToPage = (page) => history.push(page);
   const reset = () =>
     client.send(
       JSON.stringify({
@@ -29,7 +37,7 @@ export default () => {
           style={{ width: "100%" }}
           variant="contained"
           color="primary"
-          onClick={() => goToPage("rolls")}
+          onClick={() => goToPage("/rolls")}
         >
           <Typography variant="h4">Rolls</Typography>
         </Button>
@@ -40,7 +48,7 @@ export default () => {
           style={{ width: "100%" }}
           variant="contained"
           color="primary"
-          onClick={() => goToPage("stats")}
+          onClick={() => goToPage("/stats")}
         >
           <Typography variant="h4">Stats</Typography>
         </Button>

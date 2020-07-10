@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Replay from "@material-ui/icons/Replay";
 import Typography from "@material-ui/core/Typography";
+import { useHistory } from "react-router-dom";
 
 const Rolls = () => {
   const { client, rolls, lastRoll } = useContext(AppContext);
@@ -44,8 +45,10 @@ const Rolls = () => {
 };
 
 export default () => {
-  const { setActivePage, client, lastRoll } = useContext(AppContext);
-  const goToPage = (page) => setActivePage(page);
+  const { client, lastRoll } = useContext(AppContext);
+  const history = useHistory();
+  const goToPage = (page) => history.push(page);
+
   const undoRoll = () => {
     client.send(
       JSON.stringify({
@@ -58,7 +61,7 @@ export default () => {
       <Grid item xs={6}>
         <Button
           size="large"
-          onClick={() => goToPage("home")}
+          onClick={() => goToPage("/home")}
           startIcon={<ArrowBackIcon />}
         >
           Back
