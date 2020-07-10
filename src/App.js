@@ -7,8 +7,8 @@ import Page from "./Page";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { hot } from "react-hot-loader/root";
 
-const SERVER = "ws://localhost:8000";
-// const SERVER = "wss://dice-a-gram-server.herokuapp.com";
+// const SERVER = "ws://localhost:8000";
+const SERVER = "wss://dice-a-gram-server.herokuapp.com";
 
 const getClient = () => new W3CWebSocket(SERVER);
 let client = getClient();
