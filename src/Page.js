@@ -1,4 +1,4 @@
-import { Link, Route, BrowserRouter as Router, Switch } from "react-router-dom";
+import { Link, Route, HashRouter as Router, Switch } from "react-router-dom";
 import React, { useContext } from "react";
 
 import { AppContext } from "./App";
