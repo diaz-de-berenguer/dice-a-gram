@@ -52,7 +52,7 @@ const ping = (setConnected) => {
   pingTimer = setTimeout(function () {
     setConnected(false);
     location.reload();
-  }, 5000);
+  }, 2000);
 };
 
 const App = () => {
@@ -92,7 +92,7 @@ const App = () => {
       }
       if (_data.type === "__pong__") {
         clearTimeout(pingTimer);
-        setTimeout(() => ping(setConnected), 3000);
+        setTimeout(() => ping(setConnected), 1000);
         setConnected(true);
       }
     };
