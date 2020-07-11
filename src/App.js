@@ -16,7 +16,6 @@ const getClient = () => new W3CWebSocket(SERVER);
 let client = getClient();
 
 const initialRolls = {
-  1: 0,
   2: 0,
   3: 0,
   4: 0,
@@ -34,6 +33,8 @@ export const AppContext = React.createContext({
   rolls: initialRolls,
   setRolls: () => {},
   client,
+  rollCount: 0,
+  players: [],
 });
 
 let pingTimer;
@@ -59,6 +60,8 @@ const App = () => {
   const [rolls, setRolls] = useState(initialRolls);
   const [lastRoll, setLastRoll] = useState();
   const [connected, setConnected] = useState(false);
+  const [players, setPlayers] = useState([]);
+  const [rollCount, setRollCount] = useState(0);
 
   useEffect(() => {
     client.onopen = () => {
@@ -71,10 +74,17 @@ const App = () => {
     };
     client.onmessage = ({ data }) => {
       const _data = JSON.parse(data);
-      if (_data.type === "roll") {
-        const { rolls: newRolls, lastRoll } = _data;
+      if (_data.type === "data") {
+        const {
+          rolls: newRolls,
+          lastRoll,
+          rollCount: newrollCount,
+          players: newPlayers,
+        } = _data;
         setRolls(newRolls);
         setLastRoll(lastRoll);
+        setRollCount(newrollCount);
+        setPlayers(newPlayers);
       }
       if (_data.type === "reset") {
         setRolls(initialRolls);
@@ -90,7 +100,9 @@ const App = () => {
 
   return (
     <div className="App">
-      <AppContext.Provider value={{ rolls, setRolls, client, lastRoll }}>
+      <AppContext.Provider
+        value={{ rolls, setRolls, client, lastRoll, rollCount, players }}
+      >
         <Page />
       </AppContext.Provider>
       <Dialog open={!connected}>

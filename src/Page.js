@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 
 import { AppContext } from "./App";
 import HomePage from "./HomePage";
+import PlayersPage from "./PlayersPage";
 import RollsPage from "./RollsPage";
 import StatsPage from "./StatsPage";
 
@@ -14,6 +15,9 @@ export default () => (
       </Route>
       <Route path="/stats">
         <StatsPage />
+      </Route>
+      <Route path="/players">
+        <PlayersPage />
       </Route>
       <Route path="/">
         <HomePage />

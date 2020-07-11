@@ -57,6 +57,17 @@ export default () => {
         <Button
           size="large"
           style={{ width: "100%" }}
+          variant="contained"
+          color="primary"
+          onClick={() => goToPage("/players")}
+        >
+          <Typography variant="h4">Players</Typography>
+        </Button>
+      </Grid>
+      <Grid item xs={12}>
+        <Button
+          size="large"
+          style={{ width: "100%" }}
           variant="outlined"
           onClick={reset}
         >

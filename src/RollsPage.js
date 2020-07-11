@@ -6,6 +6,8 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Replay from "@material-ui/icons/Replay";
 import Typography from "@material-ui/core/Typography";
+import getPlayer from "./helpers/get-player";
+import tinycolor from "tinycolor2";
 import { useHistory } from "react-router-dom";
 
 const Rolls = () => {
@@ -29,7 +31,7 @@ const Rolls = () => {
   return (
     <Grid container spacing={2} style={{ paddingTop: "10px" }}>
       {Object.keys(rolls).map((number) => (
-        <Grid item xs={6} key={number}>
+        <Grid item xs={["6", "7", "8"].includes(number) ? 12 : 6} key={number}>
           <Button
             size="large"
             variant="outlined"

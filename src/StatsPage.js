@@ -7,21 +7,24 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import getPlayer from "./helpers/get-player";
 import { useHistory } from "react-router-dom";
 
 let svg;
 
-const drawChart = (svg, rolls, lastRoll) => {
+const drawChart = (svg, rolls, lastRoll, players, rollCount) => {
   const data = Object.entries(rolls).map(([number, value]) => ({
     number,
     value,
   }));
-  const color = "steelblue";
+  const color = "#8f9aa3";
   const margin = { top: 30, right: 0, bottom: 30, left: 40 };
   const width = parseInt(d3.select("#barchart").style("width"), 10);
   const height = parseInt(d3.select("#barchart").style("height"), 10);
   const max = d3.max(data, (d) => d.value);
   const axisFontSize = "18px";
+  const getPlayerColor = (players, rollCount) =>
+    getPlayer(players, rollCount) || "#46b482";
 
   const x = d3
     .scaleBand()
@@ -74,14 +77,14 @@ const drawChart = (svg, rolls, lastRoll) => {
     .attr("height", (d) => y(0) - y(d.value))
     .attr("width", x.bandwidth())
     .attr("fill", (d) => {
-      return d.number === lastRoll ? "#46b482" : color;
+      return d.number === lastRoll ? getPlayerColor(players, rollCount) : color;
     });
   svg.append("g").call(xAxis);
   svg.append("g").call(yAxis);
 };
 
 export default () => {
-  const { rolls, lastRoll } = useContext(AppContext);
+  const { rolls, lastRoll, players, rollCount } = useContext(AppContext);
   const history = useHistory();
   const goToPage = (page) => history.push(page);
 
@@ -94,8 +97,8 @@ export default () => {
       .append("svg")
       .attr("width", "100%")
       .attr("height", "100%");
-    drawChart(svg, rolls, lastRoll);
-  }, [rolls, lastRoll]);
+    drawChart(svg, rolls, lastRoll, players, rollCount);
+  }, [rolls, lastRoll, players, rollCount]);
 
   return (
     <Grid container>
@@ -129,7 +132,24 @@ export default () => {
         }}
       >
         {lastRoll && (
-          <Typography variant="h4">Last Roll: {lastRoll}</Typography>
+          <Grid container>
+            <Grid item xs={2}></Grid>
+            <Grid item xs={8}>
+              <Typography variant="h4" style={{ display: "inline-block" }}>
+                Last Roll:
+              </Typography>
+              <Typography
+                variant="h3"
+                style={{ display: "inline-block", marginLeft: 10 }}
+              >
+                {" "}
+                {lastRoll}
+              </Typography>
+            </Grid>
+            <Grid item xs={2} style={{ textAlign: "right" }}>
+              <Typography variant="caption">Count: {rollCount}</Typography>
+            </Grid>
+          </Grid>
         )}
       </div>
     </Grid>
